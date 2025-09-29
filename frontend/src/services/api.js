@@ -32,6 +32,12 @@ export const apiService = {
       throw error;
     }
   },
+
+  // Analytics summary (optional; backend should expose /analytics/summary/)
+  analyticsSummary: async () => {
+    const response = await api.get('/analytics/summary/');
+    return response.data;
+  },
 };
 
 export default api;

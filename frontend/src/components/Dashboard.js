@@ -4,6 +4,7 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const [apiData, setApiData] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,6 +26,20 @@ const Dashboard = () => {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      try {
+        if (apiService.analyticsSummary) {
+          const data = await apiService.analyticsSummary();
+          setAnalytics(data);
+        }
+      } catch (e) {
+        // optional endpoint; ignore if missing
+      }
+    };
+    loadAnalytics();
   }, []);
 
   const retryConnection = () => {
@@ -100,30 +115,58 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {analytics && (
+          <div className="api-status">
+            <h3>Dashboard Analytics</h3>
+            <div className="status-cards">
+              <div className="status-card info">
+                <div className="status-icon">👨‍🎓</div>
+                <h4>Total Students</h4>
+                <p>{analytics.total_students}</p>
+              </div>
+              <div className="status-card success">
+                <div className="status-icon">📅</div>
+                <h4>Present Today</h4>
+                <p>{analytics.present_today}</p>
+              </div>
+              <div className="status-card info">
+                <div className="status-icon">📚</div>
+                <h4>Open Loans</h4>
+                <p>{analytics.open_loans}</p>
+              </div>
+              <div className="status-card info">
+                <div className="status-icon">💳</div>
+                <h4>Due Invoices</h4>
+                <p>{analytics.due_invoices}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">📚</div>
-            <h3>Academic Resources</h3>
-            <p>Access study materials, notes, and educational content.</p>
-          </div>
+          <a className="feature-card" href="/scan">
+            <div className="feature-icon">🪪</div>
+            <h3>Digital ID (QR)</h3>
+            <p>Scan student QR to access records instantly.</p>
+          </a>
           
-          <div className="feature-card">
+          <a className="feature-card" href="/fees">
+            <div className="feature-icon">💳</div>
+            <h3>Fee Management</h3>
+            <p>Track tuition, hostel fees, and library fines.</p>
+          </a>
+          
+          <a className="feature-card" href="/schedule">
             <div className="feature-icon">📅</div>
-            <h3>Event Calendar</h3>
-            <p>Stay updated with important dates and events.</p>
-          </div>
+            <h3>Events & Exams</h3>
+            <p>Schedules and reminders for students.</p>
+          </a>
           
-          <div className="feature-card">
-            <div className="feature-icon">👥</div>
-            <h3>Student Community</h3>
-            <p>Connect with fellow students and share experiences.</p>
-          </div>
-          
-          <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>Progress Tracking</h3>
-            <p>Monitor your academic progress and achievements.</p>
-          </div>
+          <a className="feature-card" href="/parent">
+            <div className="feature-icon">👨‍👩‍👦</div>
+            <h3>Parent Portal</h3>
+            <p>View attendance, results, and fee status.</p>
+          </a>
         </div>
       </div>
     </div>
